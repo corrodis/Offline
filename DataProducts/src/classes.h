@@ -27,6 +27,7 @@
 
 // CRV
 #include "Offline/DataProducts/inc/CRSScintillatorBarIndex.hh"
+#include "Offline/DataProducts/inc/CrvDAQStatus.hh"
 
 // ExtMon
 #include "Offline/DataProducts/inc/ExtMonFNALModuleId.hh"

@@ -32,6 +32,11 @@
 <!--  ********* CRV  ********* -->
  <class name="mu2e::CRSScintillatorBarIndex"/>
 
+ <class name="mu2e::CrvDAQStatus" />
+ <class name="std::vector<mu2e::CrvDAQStatus>" />
+ <class name="mu2e::CrvDAQStatusCollection" />
+ <class name="art::Wrapper<mu2e::CrvDAQStatusCollection>" />
+
 <!--  ********* ExtMon  ********* -->
  <class name="mu2e::ExtMonFNALModuleId"/>
  <class name="mu2e::ExtMonFNALChipId"/>

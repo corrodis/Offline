@@ -27,7 +27,7 @@ physics : {
       {
          @table::DAQ.producers.CrvDigi
          diagLevel: 0
-         crvTag: "daq:crv"
+         crvTag: "daq:DTCEVT"
       }
   }
 

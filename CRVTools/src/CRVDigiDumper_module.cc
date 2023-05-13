@@ -5,6 +5,7 @@
 #include "art/Framework/Core/ModuleMacros.h"
 #include "Offline/RecoDataProducts/inc/CrvDigi.hh"
 #include "Offline/DataProducts/inc/CrvDAQStatus.hh"
+#include <artdaq-core-mu2e/Data/EventHeader.hh>
 #include "TTree.h"
 #include <iostream>
 #include <fstream>
@@ -44,8 +45,10 @@ namespace mu2e {
     void analyze(art::Event const& event) override;
 
   private:
+    int _diagLevel;
     std::string _crvDigiModuleLabel;
     std::string _crvDAQStatusModuleLabel;
+    std::string _eventHeaderModuleLabel;
 
     TTree *tOutDigi;
     TTree *tOutStatus;
@@ -57,8 +60,10 @@ namespace mu2e {
 
   mu2e::CRVDigiDumper::CRVDigiDumper(fhicl::ParameterSet const& pset)
     : art::EDAnalyzer(pset)
+    , _diagLevel(pset.get<int>("diagLevel",0))
     , _crvDigiModuleLabel(pset.get<std::string>("crvDigiModuleLabel","crvDigi"))
     , _crvDAQStatusModuleLabel(pset.get<std::string>("crvDigiModuleLabel","crvDigi"))
+    , _eventHeaderModuleLabel(pset.get<std::string>("eventHeaderModuleLabel","eventHeader"))
     , tOutDigi(nullptr)
     , tOutStatus(nullptr)
     {
@@ -80,12 +85,32 @@ namespace mu2e {
 
   void mu2e::CRVDigiDumper::analyze(art::Event const& event) {
 
-    // dump crvDigis
+    // header, if avaiable
+    art::Handle<mu2e::EventHeader> header;
+    event.getByLabel(_eventHeaderModuleLabel,"",header);
     art::Handle<CrvDigiCollection> crvDigiCollection;
     event.getByLabel(_crvDigiModuleLabel,"",crvDigiCollection);
+    art::Handle<CrvDAQStatusCollection> crvDAQStatusCollection;
+    event.getByLabel(_crvDAQStatusModuleLabel,"",crvDAQStatusCollection);
+
+    if (_diagLevel > 1) {
+      if(header.isValid()) {
+        std::cout << "Event header found: event window tag: " << header->ewt;
+        if(header->isOnSpill()) std::cout << " (on spill)";
+        else std::cout << " (off spill): ";
+        std::cout << "." << std::endl;
+      }
+      std::cout << "Dumping ";
+      if(crvDAQStatusCollection.isValid()) std::cout << (*crvDigiCollection).size() << " crvDigis, ";
+      if(crvDAQStatusCollection.isValid()) std::cout << (*crvDAQStatusCollection).size() << " crvDAQStatus, ";
+      std::cout << "events.";
+    }
+
+    // dump crvDigis
     if(crvDigiCollection.isValid()) {
       for(auto const & digis : *crvDigiCollection) {
-        _crvDigi.eventWindowTag = 0; // TODO
+        if(header.isValid()) _crvDigi.eventWindowTag = header->ewt;
+        else                 _crvDigi.eventWindowTag = event.event();
         _crvDigi.sipm           = digis.GetSiPMNumber();
         _crvDigi.barindex       = digis.GetScintillatorBarIndex().asInt();
         _crvDigi.time           = digis.GetStartTDC();
@@ -96,11 +121,10 @@ namespace mu2e {
     }
 
     // dump crvDAQStatus
-    art::Handle<CrvDAQStatusCollection> crvDAQStatusCollection;
-    event.getByLabel(_crvDAQStatusModuleLabel,"CrvDigi",crvDAQStatusCollection);
     if(crvDAQStatusCollection.isValid()) {
       for(auto const & s : *crvDAQStatusCollection) {
-        _crvStatus.eventWindowTag    = 0; // TODO
+        if(header.isValid()) _crvStatus.eventWindowTag = header->ewt;
+        else                _crvStatus.eventWindowTag = event.event();
         _crvStatus.eventWindowTagRoc = s.GetEventWindowTag();
         _crvStatus.activeFEBs        = s.GetActiveFEBs();
         _crvStatus.triggerCount      = s.GetTriggerCount();

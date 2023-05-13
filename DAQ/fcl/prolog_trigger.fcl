@@ -82,6 +82,13 @@ DAQ : {
          crvTag   : "daq:crv"
       }
 
+      EventHeader:
+      {
+         module_type: EventHeaderFromFragments
+         diagLevel: 0
+         dtcevtTag : "daq:DTCEVT"
+      }
+
       FastMakeSH:
       {
          module_type : StrawHitRecoFromFragments

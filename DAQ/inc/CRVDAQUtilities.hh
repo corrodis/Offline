@@ -53,10 +53,8 @@ public:
 
     //uint8_t Errors;
     ///uint8_t EventType;
-
-                uint16_t MicroBunchNumberLow;
-
                 uint16_t MicroBunchNumberHigh;
+                uint16_t MicroBunchNumberLow;
 
     CRVROCStatusPacket()
        : PacketType(0)
@@ -75,8 +73,8 @@ public:
        //, unused5(0)
        //, Errors(0)
        //, EventType(0)
-       , MicroBunchNumberLow(0)
        , MicroBunchNumberHigh(0)
+       , MicroBunchNumberLow(0)
     {}
   };
 

@@ -33,13 +33,20 @@ physics : {
          diagLevel: 10
          crvTag: "daq:DTCEVT"
       }
+    EventHeader:
+      {
+         @table::DAQ.producers.EventHeader
+         diagLevel: 10
+      }
    }
    analyzers : {
       CRVDumper :
       {
           module_type : CRVDigiDumper
-          //crvDigiModuleLabel    : "CrvDigi"
-          //crvStatusModuleLabel  : "CrvDigi"
+          eventHeaderModuleLabel : "EventHeader"
+          crvDigiModuleLabel     : "CrvDigi"
+          crvStatusModuleLabel   : "CrvDigi"
+          diagLevel : 10
       }
 
       eventdisplay: {
@@ -49,7 +56,7 @@ physics : {
       }
   }
 
-  t1 : [ CrvDigi ]
+  t1 : [ EventHeader, CrvDigi ]
   e1 : [ CRVDumper, outfile ]
 
   trigger_paths  : [t1]
@@ -71,7 +78,3 @@ outputs:  {
 #                     ]
   }
 }
-
-#services.message.destinations.log.categories.ArtReport.reportEvery : 1
-#services.message.destinations.log.categories.ArtReport.limit : 1
-#services.message.destinations.log.categories.ArtReport.timespan : 300

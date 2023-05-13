@@ -171,7 +171,7 @@ void CrvDigisFromFragments::produce(Event& event) {
             std::cout << "unused          0x" << +crvRocHdr->unused2 << std::endl;
             std::cout << "Active FEBs     0x" << +crvRocHdr->ActiveFEBFlags2 << " " << +crvRocHdr->ActiveFEBFlags1 << " " << +crvRocHdr->ActiveFEBFlags0 << std::endl;
             std::cout << "TriggerCount    0x" << crvRocHdr->TriggerCount << std::endl;
-            std::cout << "Status          0x" << +crvRocHdr->Status2 << +crvRocHdr->Status << std::endl;
+            std::cout << "Status          0x" << +crvRocHdr->Status << +crvRocHdr->Status2 << std::endl;
             std::cout << "EvWindowTag     0x" << crvRocHdr->MicroBunchNumberHigh << " " << crvRocHdr->MicroBunchNumberLow << std::endl;
             std::cout << std::dec;
           }

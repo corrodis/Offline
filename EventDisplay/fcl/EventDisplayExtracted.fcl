@@ -1,7 +1,4 @@
-#include "Offline/fcl/minimalMessageService.fcl"
-#include "Offline/fcl/standardProducers.fcl"
-#include "Offline/fcl/standardServices.fcl"
-#include "Offline/CommonMC/fcl/prolog.fcl"
+#include "Offline/EventDisplay/fcl/EventDisplayBase.fcl"
 
 process_name : EventDisplay
 
